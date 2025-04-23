@@ -1,0 +1,104 @@
+.registrationContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 100px;
+    background-color: #f9f9f9; /* Светлый фон для контейнера */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для глубины */
+  }
+  
+  .header {
+    text-align: center;
+    color: #333; /* Тёмный цвет заголовка */
+  }
+  
+  .subHeader {
+    color: #555; /* Цвет подзаголовка */
+    margin-top: 20px; /* Отступ сверху */
+  }
+  
+  .formGroup {
+    margin-bottom: 20px; /* Увеличенный отступ между группами */
+  }
+  
+  #f {
+    display: flex;
+  }
+  .label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold; /* Полужирный шрифт для меток */
+    color: #666; /* Цвет меток */
+  }
+  
+  .inputField,
+  .selectField {
+    width: 100%;
+    padding: 12px; /* Увеличенный внутренний отступ */
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s; /* Плавный переход цвета границы */
+  }
+  
+  .inputField:focus,
+  .selectField:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем стандартный обвод при фокусе */
+  }
+  
+  .submitButton {
+    padding: 12px 20px; /* Увеличенный внутренний отступ для кнопки */
+    background-color: #007bff; /* Основной цвет кнопки */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* Увеличенный шрифт */
+    transition: background-color 0.3s, transform 0.2s; /* Плавные переходы */
+    justify-self: center;
+    justify-content: center;
+    justify-items: center;
+    
+  }
+  
+  .submitButton:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+    transform: translateY(-2px); /* Поднимаем кнопку при наведении */
+  }
+  
+  .submitButton:active {
+    transform: translateY(0); /* Сбрасываем подъем при нажатии */
+  }
+  
+  .textCenter {
+    text-align: center; /* Центрируем текст */
+    margin-top: 20px; /* Отступ сверху */
+    color: #777; /* Цвет текста */
+  }
+  .buttonWrapper {
+    display: flex;
+    justify-content: center; /* Центрирование кнопки */
+    margin-top: 20px; /* Дополнительный отступ сверху, если нужно */
+  }
+  
+  .submitButton {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .submitButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+  
+  .submitButton:active {
+    transform: translateY(0);
+  }
+  

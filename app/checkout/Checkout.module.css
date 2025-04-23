@@ -1,0 +1,75 @@
+.checkoutContainer {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  .checkoutTitle {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .cartItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .cartItemDetails {
+    flex-grow: 1;
+    margin-left: 10px;
+  }
+  
+  .cartItemName {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .cartItemPrice {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .totalCost {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .confirmButton {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+  }
+  
+  .confirmButton:hover {
+    background-color: #45a049;
+  }
+  
+  .confirmButton:active {
+    background-color: #3e8e41;
+  }
+  
+  

@@ -1,0 +1,214 @@
+.adminContainer {
+    padding: 20px;
+  }
+  
+  .header {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .subHeader {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .userTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .userTable th, .userTable td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .userTable th {
+    background-color: #f4f4f4;
+  }
+  
+  .ordersTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.ordersTable th, .ordersTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.ordersTable th {
+    background-color: #f4f4f4;
+}
+
+.adminContainer {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.orderTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.orderTable th, .orderTable td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.showMoreButton {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.showMoreButton:hover {
+  background-color: #0056b3;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.modal li {
+  margin: 5px 0;
+}
+
+.closeButton {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.closeButton:hover {
+  background-color: #d32f2f;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Общие стили для админки */
+.adminContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Заголовки */
+.header {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.subHeader {
+  font-size: 1.5rem;
+  margin-top: 20px;
+  color: #555;
+}
+
+/* Форма для входа */
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #fafafa;
+}
+
+.loginContainer h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.loginContainer form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  max-width: 100%;
+}
+
+.loginContainer input {
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.loginContainer button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.loginContainer button:hover {
+  background-color: #0056b3;
+}
+
+.loginContainer .error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}

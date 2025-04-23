@@ -1,0 +1,125 @@
+/* Footer.module.css */
+.footer {
+    background-color: #2b3a42;
+    padding: 30px 0;
+    
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    color: #c9d1d3;
+   
+  }
+  
+  .footerContainer {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 50px;
+    
+  }
+  
+  .footerLogo, .footerMenu, .footerInfo, .footerPayment {
+    flex: 1;
+  }
+  
+  .footerLogo img {
+    width: 150px;
+  }
+  
+  .footerLogo address {
+    margin-top: 30px;
+  }
+  
+  .footerLogo p {
+    margin: 5px 0;
+  }
+  
+  .footerMenu ul, .footerInfo ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footerMenu ul li, .footerInfo ul li {
+    margin-bottom: 8px;
+  }
+  
+  .footerMenu ul li a, .footerInfo ul li a {
+    color: #c9d1d3;
+    text-decoration: none;
+  }
+  
+  .footerMenu ul li a:hover, .footerInfo ul li a:hover{
+    text-decoration: underline;
+  }
+  
+  .footerPayment .socialIcons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .footerBottom {
+    text-align: center;
+    margin-top: 4%;
+    padding-top: 5%;
+    border-top: 1px solid #4a5d68;
+  }
+  
+  .footerBottom p {
+    margin: 10px 0;
+  }
+  
+  .footerBottom a {
+    color: #c9d1d3;
+    text-decoration: none;
+  }
+  
+  .footerBottom a:hover {
+    text-decoration: underline;
+  }
+  
+
+  
+
+
+  @media (max-width: 609px) {
+    .footerContainer {
+
+        flex-direction: column; 
+        align-items: center; 
+    }
+    .footerLogo {
+        display: none;
+    }
+
+}
+
+/* Для планшетов */
+@media (min-width: 610px) and (max-width: 900px) {
+    .footerContainer {
+        flex-direction: row; 
+        justify-content: space-between; 
+    }
+}
+
+/*Для маленьких телефонов*/
+
+@media (min-width: 430) and (max-width: 609px) {
+    .footerLogo {
+        display: none;
+    }
+}
+
+/* Для десктопов */
+@media (min-width: 901px) {
+    .footerContainer {
+        margin-left: 15%;
+        flex-direction: row; 
+        padding: 10px 50px; 
+    }
+}
+
+.footerInfo h3{
+    padding-bottom: 10px;
+}
+
+.footerMenu h3{
+    padding-bottom: 10px;
+} 
