@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/admin/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/admin/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+
+import React, { useState, useEffect } from "react";
+import styles from "./admin.module.css";
+import UploadProductForm from "../components/UploadProductForm";
+
+/**
+ * Компонент AdminPage предоставляет административную панель для управления пользователями и заказами.
+ * Позволяет авторизоваться по паролю, просматривать список пользователей и заказов,
+ * верифицировать пользователей и просматривать детали заказов.
+ *
+ * @component
+ * @returns {JSX.Element} Разметка страницы админки.
+ */
+export default function AdminPage() {
+  /** @type {Array&lt;Object>} */
+  const [users, setUsers] = useState([]);
+  /** @type {Array&lt;Object>} */
+  const [orders, setOrders] = useState([]);
+  /** @type {Object|null} */
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  /** @type {string} */
+  const [password, setPassword] = useState("");
+  /** @type {boolean} */
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  /** @type {string} */
+  const [error, setError] = useState("");
+
+  /**
+   * Обработчик формы входа.
+   * Проверяет введённый пароль и устанавливает статус авторизации.
+   *
+   * @param {React.FormEvent&lt;HTMLFormElement>} e - событие отправки формы
+   */
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (password === "admin") {
+      // TODO: заменить на безопасную авторизацию
+      setIsLoggedIn(true);
+      setError("");
+    } else {
+      setError("Неверный пароль");
+    }
+  };
+
+  /**
+   * Загружает список пользователей с сервера при монтировании компонента.
+   */
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("/api/users");
+        if (!response.ok) {
+          throw new Error(`Ошибка: ${response.status}`);
+        }
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Ошибка при получении пользователей:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  /**
+   * Загружает список заказов с сервера при монтировании компонента.
+   */
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch("/api/admin/orders");
+        if (!response.ok) {
+          throw new Error(`Ошибка: ${response.status}`);
+        }
+        const data = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error("Ошибка при получении заказов:", error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  /**
+   * Отправляет запрос на верификацию пользователя по ID.
+   * Обновляет состояние пользователей после успешной верификации.
+   *
+   * @param {number|string} id - ID пользователя для верификации
+   */
+  const handleVerify = async (id) => {
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка верификации: ${response.status}`);
+      }
+
+      const updatedUser = await response.json();
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        )
+      );
+      alert("Пользователь успешно верифицирован!");
+    } catch (error) {
+      console.error(error);
+      alert(`Ошибка при верификации: ${error.message}`);
+    }
+  };
+
+  /**
+   * Открывает модальное окно с деталями выбранного заказа.
+   *
+   * @param {Object} order - Заказ для просмотра
+   */
+  const openOrderDetails = (order) => setSelectedOrder(order);
+
+  /**
+   * Закрывает модальное окно с деталями заказа.
+   */
+  const closeOrderDetails = () => setSelectedOrder(null);
+
+  if (!isLoggedIn) {
+    return (
+      &lt;div className={styles.loginContainer}>
+        &lt;h2>Введите пароль для доступа в админку&lt;/h2>
+        &lt;form onSubmit={handleLogin}>
+          &lt;input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Пароль"
+          />
+          &lt;button type="submit">Войти&lt;/button>
+        &lt;/form>
+        {error &amp;&amp; &lt;p className={styles.error}>{error}&lt;/p>}
+      &lt;/div>
+    );
+  }
+
+  return (
+    &lt;div className={styles.adminContainer}>
+      &lt;h1 className={styles.header}>Админка&lt;/h1>
+      &lt;h2 className={styles.subHeader}>Список пользователей&lt;/h2>
+
+      {/* Форма для загрузки Excel с товарами */}
+      &lt;UploadProductForm />
+
+      {/* Таблица пользователей */}
+      &lt;table className={styles.userTable}>
+        &lt;thead>
+          &lt;tr>
+            &lt;th>ID&lt;/th>
+            &lt;th>Имя пользователя&lt;/th>
+            &lt;th>Email&lt;/th>
+            &lt;th>Телефон&lt;/th>
+            &lt;th>Компания&lt;/th>
+            &lt;th>Должность&lt;/th>
+            &lt;th>Статус активации&lt;/th>
+            &lt;th>Действия&lt;/th>
+          &lt;/tr>
+        &lt;/thead>
+        &lt;tbody>
+          {users.map((user) => (
+            &lt;tr key={user.id}>
+              &lt;td>{user.id}&lt;/td>
+              &lt;td>{user.username}&lt;/td>
+              &lt;td>{user.email || "Не указан"}&lt;/td>
+              &lt;td>{user.phone || "Не указан"}&lt;/td>
+              &lt;td>{user.company || "Не указана"}&lt;/td>
+              &lt;td>{user.position || "Не указана"}&lt;/td>
+              &lt;td>{user.isactivated ? "Активен" : "Неактивен"}&lt;/td>
+              &lt;td>
+                {!user.isactivated ? (
+                  &lt;button onClick={() => handleVerify(user.id)}>
+                    Верифицировать
+                  &lt;/button>
+                ) : (
+                  &lt;p>Верифицирован&lt;/p>
+                )}
+              &lt;/td>
+            &lt;/tr>
+          ))}
+        &lt;/tbody>
+      &lt;/table>
+
+      &lt;h2 className={styles.subHeader}>Список заказов&lt;/h2>
+
+      {/* Таблица заказов */}
+      &lt;table className={styles.orderTable}>
+        &lt;thead>
+          &lt;tr>
+            &lt;th>№ Заказа&lt;/th>
+            &lt;th>Заказчик&lt;/th>
+            &lt;th>Товары&lt;/th>
+            &lt;th>Сумма&lt;/th>
+            &lt;th>Дата&lt;/th>
+            &lt;th>Статус&lt;/th>
+            &lt;th>Действия&lt;/th>
+          &lt;/tr>
+        &lt;/thead>
+        &lt;tbody>
+          {orders.map((order) => (
+            &lt;tr key={order.order_id}>
+              &lt;td>{order.order_id}&lt;/td>
+              &lt;td>{order.customer_name}&lt;/td>
+              &lt;td>{order.items.length} товаров&lt;/td>
+              &lt;td>{order.total_cost} TJS&lt;/td>
+              &lt;td>{new Date(order.created_at).toLocaleString()}&lt;/td>
+              &lt;td>{order.status}&lt;/td>
+              &lt;td>
+                &lt;button
+                  onClick={() => openOrderDetails(order)}
+                  className={styles.showMoreButton}
+                >
+                  Просмотр
+                &lt;/button>
+              &lt;/td>
+            &lt;/tr>
+          ))}
+        &lt;/tbody>
+      &lt;/table>
+
+      {/* Модальное окно с деталями заказа */}
+      {selectedOrder &amp;&amp; (
+        &lt;div className={styles.modal}>
+          &lt;div className={styles.modalContent}>
+            &lt;h3>Товары в заказе №{selectedOrder.order_id}&lt;/h3>
+            &lt;ul>
+              {selectedOrder.items &amp;&amp; selectedOrder.items.length > 0 ? (
+                selectedOrder.items.map((item, index) => (
+                  &lt;li key={index}>
+                    {item.category} {item.name} ({item.quantity} x{" "}
+                    {item.volume || "не указано"} {item.unit || ""})
+                  &lt;/li>
+                ))
+              ) : (
+                &lt;p>Товары отсутствуют.&lt;/p>
+              )}
+            &lt;/ul>
+            &lt;button onClick={closeOrderDetails} className={styles.closeButton}>
+              Закрыть
+            &lt;/button>
+          &lt;/div>
+        &lt;/div>
+      )}
+    &lt;/div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Cart">Cart</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#GET">GET</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#POST">POST</a></li><li><a href="global.html#down">down</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#up">up</a></li><li><a href="global.html#useCart">useCart</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 22:22:44 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

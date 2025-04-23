@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/components/Header.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/components/Header.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client"; // Указание, что компонент клиентский
+import "@fortawesome/fontawesome-free/css/all.css";
+import styles from "./Header.css";
+import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation"; // Импортируем usePathname
+import { useCart } from "./CartContext";
+import Cookies from "js-cookie"; // Импортируем библиотеку для работы с cookies
+
+/**
+ * Компонент Header - шапка сайта, содержащая логотип, каталог, поиск,
+ * кнопки авторизации/личного кабинета, избранного, корзины и меню навигации.
+ * Обеспечивает функциональность поиска, входа/выхода из аккаунта и отображение уведомлений.
+ *
+ * @component
+ * @returns {JSX.Element} Разметка шапки сайта
+ */
+const Header = () => {
+  const pathname = usePathname(); // Получаем текущий маршрут
+  const [showLoginForm, setShowLoginForm] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [notification, setNotification] = useState(null);
+  const { cart, totalCost } = useCart();
+  const modalRef = useRef(null); // Реф для модального окна
+
+  const token = Cookies.get("auth_token");
+
+  useEffect(() => {
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [token]);
+
+  /**
+   * Обработчик отправки формы поиска.
+   * Выполняет запрос к API и обновляет результаты поиска.
+   *
+   * @async
+   * @param {React.FormEvent&lt;HTMLFormElement>} e - событие отправки формы
+   */
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(
+        `/api/products/search?search=${encodeURIComponent(searchTerm)}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setSearchResults(data);
+      } else {
+        setNotification({
+          type: "error",
+          message: data.error || "Не удалось выполнить поиск",
+        });
+      }
+    } catch (error) {
+      setNotification({
+        type: "error",
+        message: "Ошибка сети. Проверьте соединение.",
+      });
+      console.error("Search error:", error);
+    }
+  };
+
+  /**
+   * Обработчик выхода из аккаунта.
+   * Отправляет запрос на сервер и обновляет состояние авторизации.
+   *
+   * @async
+   */
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/logout", { method: "POST" });
+
+      if (res.ok) {
+        setIsLoggedIn(false);
+        setNotification({ type: "success", message: "Вы успешно вышли." });
+      } else {
+        setNotification({
+          type: "error",
+          message: "Не удалось выйти из аккаунта.",
+        });
+      }
+    } catch (error) {
+      setNotification({ type: "error", message: "Ошибка сети при выходе." });
+      console.error("Logout error:", error);
+    }
+  };
+
+  /**
+   * Обработчик клика на ссылку "Войти".
+   * Открывает форму входа.
+   *
+   * @param {React.MouseEvent&lt;HTMLAnchorElement>} e - событие клика
+   */
+  const handleLoginClick = (e) => {
+    e.preventDefault();
+    setShowLoginForm(true);
+  };
+
+  /**
+   * Обработчик закрытия формы входа.
+   */
+  const handleClose = () => {
+    setShowLoginForm(false);
+  };
+
+  /**
+   * Переключает состояние мобильного меню.
+   */
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  /**
+   * Обработчик отправки формы входа.
+   * Отправляет данные на сервер и обрабатывает ответ.
+   *
+   * @async
+   * @param {React.FormEvent&lt;HTMLFormElement>} e - событие отправки формы
+   */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setNotification({
+          type: "success",
+          message: "Успешный вход. Добро пожаловать!",
+        });
+        console.log("Login successful:", data);
+        setIsLoggedIn(true);
+      } else {
+        setNotification({
+          type: "error",
+          message: data.error || "Не удалось войти",
+        });
+      }
+    } catch (error) {
+      setNotification({
+        type: "error",
+        message: "Ошибка сети. Проверьте соединение и попробуйте снова.",
+      });
+      console.error("Network error:", error);
+    }
+
+    setShowLoginForm(false);
+  };
+
+  /**
+   * Обработчик кликов вне модального окна.
+   * Закрывает форму входа при клике вне её.
+   *
+   * @param {MouseEvent} event - событие клика
+   */
+  const handleClickOutside = (event) => {
+    if (modalRef.current &amp;&amp; !modalRef.current.contains(event.target)) {
+      setShowLoginForm(false);
+    }
+  };
+
+  // Добавляем и удаляем обработчик кликов вне модального окна при изменении showLoginForm
+  useEffect(() => {
+    if (showLoginForm) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showLoginForm]);
+
+  /**
+   * Закрывает уведомление.
+   */
+  const closeNotification = () => {
+    setNotification(null);
+  };
+
+  return (
+    &lt;div className="headerNavig">
+      &lt;header className="header">
+        &lt;div className="headerLogo">
+          &lt;Link href="/">1001may LOGO&lt;/Link>
+        &lt;/div>
+        &lt;div className="headerKatalog">Каталог&lt;/div>
+        &lt;div className="headerSearch">
+          &lt;form onSubmit={handleSearch}>
+            &lt;input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Искать..."
+              className="searchInput"
+            />
+            &lt;Link
+              href={`/search?search=${searchTerm}`}
+              passHref
+              legacyBehavior
+            >
+              &lt;button type="submit" className="searchButton">
+                Поиск
+              &lt;/button>
+            &lt;/Link>
+          &lt;/form>
+        &lt;/div>
+        &lt;div className="searchResults">
+          {searchResults.length > 0 &amp;&amp; (
+            &lt;ul>
+              {searchResults.map((product) => (
+                &lt;li key={product.id}>
+                  {product.name} — {product.price} ₽
+                &lt;/li>
+              ))}
+            &lt;/ul>
+          )}
+        &lt;/div>
+
+        &lt;div className="headerButtons">
+          {!isLoggedIn &amp;&amp; pathname !== "/registration" &amp;&amp; !showLoginForm &amp;&amp; (
+            &lt;a
+              href="#"
+              onClick={handleLoginClick}
+              className={`${styles.iUserHeader} ${styles.headerNavItem}`}
+            >
+              &lt;i className="fa fa-user">&lt;/i> {/* Иконка пользователя */}
+              &lt;span className={styles.headerNavItemText}>Войти&lt;/span>
+            &lt;/a>
+          )}
+
+          {isLoggedIn &amp;&amp; (
+            &lt;Link
+              href="/account"
+              className={`${styles.iUserHeader} ${styles.headerNavItem}`}
+            >
+              &lt;i className="fa fa-user">&lt;/i> {/* Иконка пользователя */}
+              &lt;span className={styles.headerNavItemText}>Личный кабинет&lt;/span>
+            &lt;/Link>
+          )}
+
+          &lt;a
+            href="#"
+            className={`${styles.iFavoriteHeader} ${styles.headerNavItem}`}
+          >
+            &lt;i className="fa fa-heart">&lt;/i> {/* Иконка сердца */}
+            &lt;span className={styles.headerNavItemText}>Избранное&lt;/span>
+          &lt;/a>
+          &lt;Link
+            href="/cart"
+            className={`${styles.iCartHeader} ${styles.headerNavItem}`}
+          >
+            &lt;i className="fa fa-shopping-cart">&lt;/i> {/* Иконка корзины */}
+            &lt;span className={styles.headerNavItemText}>
+              Корзина ({cart.length}): {totalCost} TJS
+            &lt;/span>
+          &lt;/Link>
+          {isLoggedIn &amp;&amp; (
+            &lt;a
+              href="#"
+              onClick={handleLogout}
+              className={`${styles.iUserHeader} ${styles.headerNavItem}`}
+            >
+              &lt;i className="fa fa-sign-out-alt">&lt;/i> {/* Иконка выхода */}
+              &lt;span className={styles.headerNavItemText}>Выйти&lt;/span>
+            &lt;/a>
+          )}
+        &lt;/div>
+        {showLoginForm &amp;&amp; (
+          &lt;div className="modal">
+            &lt;div className="modal-content" ref={modalRef}>
+              &lt;div className="login-box">
+                &lt;span className="close" onClick={handleClose}>
+                  &amp;times;
+                &lt;/span>
+                &lt;h2>Вход&lt;/h2>
+                &lt;form onSubmit={handleSubmit}>
+                  &lt;div className="user-box">
+                    &lt;input
+                      type="text"
+                      name="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
+                    &lt;label>Логин&lt;/label>
+                  &lt;/div>
+                  &lt;div className="user-box">
+                    &lt;input
+                      type="password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    &lt;label>Пароль&lt;/label>
+                  &lt;/div>
+                  &lt;Link href="/registration" passHref legacyBehavior>
+                    &lt;div className="registration" onClick={handleClose}>
+                      Создать аккаунт
+                    &lt;/div>
+                  &lt;/Link>
+                  &lt;button type="submit" className="login-button">
+                    Войти
+                  &lt;/button>
+                &lt;/form>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        )}
+
+        {notification &amp;&amp; (
+          &lt;div className={`notification ${notification.type}`}>
+            &lt;div className="notification-content">
+              &lt;p>{notification.message}&lt;/p>
+              &lt;button
+                onClick={closeNotification}
+                className="close-notification"
+              >
+                &amp;times;
+              &lt;/button>
+            &lt;/div>
+          &lt;/div>
+        )}
+      &lt;/header>
+      &lt;nav>
+        &lt;div className="navigationWrapper">
+          &lt;ul className="navigation">
+            &lt;li className="navItem">
+              &lt;Link
+                href="/allProducts?category=Соки"
+                className={styles.navItem}
+              >
+                Соки
+              &lt;/Link>
+            &lt;/li>
+            &lt;li className="navItem">
+              &lt;Link
+                href="/allProducts?category=Вода"
+                className={styles.navItem}
+              >
+                Вода
+              &lt;/Link>
+            &lt;/li>
+            &lt;li className="navItem">
+              &lt;Link
+                href="/allProducts?category=Энергетики"
+                className={styles.navItem}
+              >
+                Энергетики
+              &lt;/Link>
+            &lt;/li>
+            &lt;li className="navItem">
+              &lt;Link
+                href="/allProducts?category=Спортивные напитки"
+                className={styles.navItem}
+              >
+                Спортивные напитки
+              &lt;/Link>
+            &lt;/li>
+            &lt;li className="navItem">
+              &lt;Link
+                href="/allProducts?category=Чай"
+                className={styles.navItem}
+              >
+                Чай
+              &lt;/Link>
+            &lt;/li>
+            &lt;li className="navItem">
+              &lt;Link
+                href="/allProducts?category=Газировки"
+                className={styles.navItem}
+              >
+                Газировки
+              &lt;/Link>
+            &lt;/li>
+          &lt;/ul>
+        &lt;/div>
+      &lt;/nav>
+    &lt;/div>
+  );
+};
+
+export default Header;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Cart">Cart</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#GET">GET</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#POST">POST</a></li><li><a href="global.html#down">down</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#up">up</a></li><li><a href="global.html#useCart">useCart</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 22:22:44 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
