@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/account/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/account/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+
+import React, { useEffect, useState } from "react";
+import styles from "./account.module.css";
+
+/**
+ * Компонент Account отображает личную информацию пользователя и историю его заказов.
+ * Загружает данные с сервера и предоставляет возможность просмотра деталей каждого заказа в модальном окне.
+ *
+ * @component
+ * @returns {JSX.Element} Разметка страницы аккаунта пользователя.
+ */
+export default function Account() {
+  /** @type {Object|null} */
+  const [userData, setUserData] = useState(null);
+  /** @type {Array&lt;Object>} */
+  const [orders, setOrders] = useState([]);
+  /** @type {boolean} */
+  const [loading, setLoading] = useState(true);
+  /** @type {boolean} */
+  const [modalOpen, setModalOpen] = useState(false);
+  /** @type {Object|null} */
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  useEffect(() => {
+    /**
+     * Асинхронная функция для получения данных аккаунта пользователя с сервера.
+     * Загружает данные пользователя и заказы, обновляет состояние компонента.
+     */
+    async function fetchAccountData() {
+      try {
+        const response = await fetch("/api/account?userId=6");
+        if (!response.ok) {
+          throw new Error("Failed to fetch account data");
+        }
+        const data = await response.json();
+        setUserData(data.user);
+        setOrders(data.orders);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAccountData();
+  }, []);
+
+  /**
+   * Открывает модальное окно с деталями выбранного заказа.
+   * @param {Object} order - Заказ, который необходимо отобразить.
+   */
+  const openModal = (order) => {
+    setSelectedOrder(order);
+    setModalOpen(true);
+  };
+
+  /**
+   * Закрывает модальное окно и сбрасывает выбранный заказ.
+   */
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  if (loading) {
+    return &lt;div>Загрузка...&lt;/div>;
+  }
+
+  if (!userData) {
+    return &lt;div>Ошибка загрузки данных. Попробуйте снова.&lt;/div>;
+  }
+
+  return (
+    &lt;div className={styles.accountContainer}>
+      &lt;div className={styles.userInfo}>
+        &lt;h2>Личная информация&lt;/h2>
+        &lt;div className={styles.userCard}>
+          &lt;div className={styles.avatar}>
+            &lt;img src="https://via.placeholder.com/150" alt="Avatar" />
+          &lt;/div>
+          &lt;div className={styles.details}>
+            &lt;h3>
+              {userData.firstname} {userData.lastname}
+            &lt;/h3>
+            &lt;p>
+              &lt;strong>Имя пользователя:&lt;/strong> {userData.username}
+            &lt;/p>
+            &lt;p>
+              &lt;strong>Email:&lt;/strong> {userData.email || "Не указан"}
+            &lt;/p>
+            &lt;p>
+              &lt;strong>Телефон:&lt;/strong> {userData.phone}
+            &lt;/p>
+            &lt;p>
+              &lt;strong>Компания:&lt;/strong> {userData.company || "Не указана"}
+            &lt;/p>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+
+      &lt;div className={styles.orderHistory}>
+        &lt;h2>История заказов&lt;/h2>
+        {orders.length === 0 ? (
+          &lt;p>У вас пока нет заказов.&lt;/p>
+        ) : (
+          &lt;table className={styles.ordersTable}>
+            &lt;thead>
+              &lt;tr>
+                &lt;th>Номер заказа&lt;/th>
+                &lt;th>Дата&lt;/th>
+                &lt;th>Статус&lt;/th>
+                &lt;th>Сумма&lt;/th>
+                &lt;th>Действия&lt;/th>
+              &lt;/tr>
+            &lt;/thead>
+            &lt;tbody>
+              {orders.map((order) => (
+                &lt;tr key={order.order_id}>
+                  &lt;td>{order.order_id}&lt;/td>
+                  &lt;td>{new Date(order.order_date).toLocaleDateString()}&lt;/td>
+                  &lt;td>{order.order_status}&lt;/td>
+                  &lt;td>{order.total_cost} ₽&lt;/td>
+                  &lt;td>
+                    &lt;button
+                      className={styles.viewButton}
+                      onClick={() => openModal(order)}
+                    >
+                      Смотреть
+                    &lt;/button>
+                  &lt;/td>
+                &lt;/tr>
+              ))}
+            &lt;/tbody>
+          &lt;/table>
+        )}
+      &lt;/div>
+    &lt;/div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Cart">Cart</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#GET">GET</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#POST">POST</a></li><li><a href="global.html#down">down</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#up">up</a></li><li><a href="global.html#useCart">useCart</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 22:22:44 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

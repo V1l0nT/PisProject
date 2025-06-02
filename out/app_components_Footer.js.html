@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/components/Footer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/components/Footer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import styles from "./Footer.module.css";
+
+/**
+ * Компонент Footer отображает нижний колонтитул сайта с контактной информацией,
+ * меню каталога, информационными ссылками и юридическими уведомлениями.
+ *
+ * @component
+ * @returns {JSX.Element} Разметка футера сайта
+ */
+const Footer = () => {
+  return (
+    &lt;footer className={styles.footer}>
+      &lt;div className={styles.footerContainer}>
+        &lt;div className={styles.footerLogo}>
+          &lt;p>Винный магазин&lt;/p>
+          &lt;a href="tel:+74956625895">+7 (929) 937-25-85&lt;/a>
+          &lt;a href="mailto:patsangeniy@gmail.com">patsangeniy@gmail.com&lt;/a>
+          &lt;address>
+            &lt;p>Проспект Вернадского 86с1&lt;/p>
+          &lt;/address>
+        &lt;/div>
+        &lt;div className={styles.footerMenu}>
+          &lt;h3>Каталог&lt;/h3>
+          &lt;ul>
+            &lt;li>
+              &lt;a href="#">Виски&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Коньяк&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Шампанское&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Вино&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Макаллан&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Хеннесси&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Чивас Ригал&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Моет Шандон&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Джонни Уокер&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Лучший алкоголь&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Подарочные сертификаты&lt;/a>
+            &lt;/li>
+          &lt;/ul>
+        &lt;/div>
+        &lt;div className={styles.footerInfo}>
+          &lt;h3>Информация&lt;/h3>
+          &lt;ul>
+            &lt;li>
+              &lt;a href="#">О магазинах&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Условия работы&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Скидки&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Дегустации&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Гарантии&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Отзывы о магазине&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">О компании&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Корпоративным клиентам&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Статьи&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Вакансии&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Контакты&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Карта сайта&lt;/a>
+            &lt;/li>
+            &lt;li>
+              &lt;a href="#">Отзывы на алкоголь&lt;/a>
+            &lt;/li>
+          &lt;/ul>
+        &lt;/div>
+      &lt;/div>
+      &lt;div className={styles.footerBottom}>
+        &lt;p>18+ Чрезмерное употребление алкоголя вредит вашему здоровью&lt;/p>
+        &lt;p>© 2005 - 2024 "1001 май" - Магазин элитного алкоголя&lt;/p>
+        &lt;p>
+          &lt;a href="#">Пользовательское соглашение&lt;/a> |{" "}
+          &lt;a href="#">Политика конфиденциальности&lt;/a>
+        &lt;/p>
+      &lt;/div>
+    &lt;/footer>
+  );
+};
+
+export default Footer;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Cart">Cart</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#GET">GET</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#POST">POST</a></li><li><a href="global.html#down">down</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#up">up</a></li><li><a href="global.html#useCart">useCart</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 22:22:44 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

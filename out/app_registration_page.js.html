@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/registration/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/registration/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import styles from "./page.module.css";
+
+/**
+ * Компонент Registration — форма регистрации нового пользователя.
+ * Позволяет ввести основные данные, имя пользователя, email (необязательно), телефон,
+ * компанию и пароль. Отправляет данные на сервер для регистрации.
+ *
+ * @component
+ * @returns {JSX.Element} Разметка страницы регистрации
+ */
+export default function Registration() {
+  /** @type {Object} formData - состояние данных формы */
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    username: "", // Это поле для ввода имени пользователя
+    email: "", // Поле для email, теперь оно необязательное
+    phone: "",
+    company: "",
+    password: "",
+  });
+
+  /**
+   * Обработчик изменения значений в форме.
+   * Обновляет состояние formData при изменении любого поля формы.
+   *
+   * @param {React.ChangeEvent&lt;HTMLInputElement>} e - событие изменения input
+   */
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  /**
+   * Обработчик отправки формы.
+   * Отправляет данные формы на сервер для регистрации.
+   *
+   * @async
+   * @param {React.FormEvent&lt;HTMLFormElement>} e - событие отправки формы
+   */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log("Form data:", formData);
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error:", errorData);
+      return;
+    }
+
+    const result = await response.json();
+    console.log("User registered:", result);
+  };
+
+  return (
+    &lt;div className={styles.registrationContainer}>
+      &lt;h1 className={styles.header}>Регистрация&lt;/h1>
+      &lt;p className={styles.textCenter}>
+        Если вы уже зарегистрированы, перейдите на страницу{" "}
+        &lt;Link href="/">авторизации&lt;/Link>.
+      &lt;/p>
+      &lt;form onSubmit={handleSubmit} id="f">
+        &lt;h2 className={styles.subHeader}>Основные данные&lt;/h2>
+        &lt;div className={styles.formGroup}>
+          &lt;label className={styles.label}>Имя&lt;/label>
+          &lt;input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            className={styles.inputField}
+          />
+        &lt;/div>
+        &lt;div className={styles.formGroup}>
+          &lt;label className={styles.label}>Фамилия&lt;/label>
+          &lt;input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+            className={styles.inputField}
+          />
+        &lt;/div>
+        &lt;div className={styles.formGroup}>
+          &lt;label className={styles.label}>Имя пользователя&lt;/label>
+          &lt;input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            className={styles.inputField}
+          />
+        &lt;/div>
+        &lt;div className={styles.formGroup}>
+          &lt;label className={styles.label}>Email&lt;/label>
+          &lt;input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={styles.inputField} // Убираем 'required'
+          />
+        &lt;/div>
+        &lt;div className={styles.formGroup}>
+          &lt;label className={styles.label}>Телефон&lt;/label>
+          &lt;input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className={styles.inputField}
+          />
+        &lt;/div>
+        &lt;div className={styles.formGroup}>
+          &lt;label className={styles.label}>Пароль&lt;/label>
+          &lt;input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className={styles.inputField}
+          />
+        &lt;/div>
+        &lt;h2 className={styles.subHeader}>Дополнительно&lt;/h2>
+        &lt;div className={styles.formGroup}>
+          &lt;label className={styles.label}>Компания&lt;/label>
+          &lt;input
+            type="text"
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
+            className={styles.inputField}
+          />
+        &lt;/div>
+        &lt;div className={styles.buttonWrapper}>
+          &lt;button type="submit" className={styles.submitButton}>
+            Продолжить
+          &lt;/button>
+        &lt;/div>
+      &lt;/form>
+
+      &lt;p className={styles.textCenter}>
+        Если у вас есть вопросы, обратитесь к нам.
+      &lt;/p>
+    &lt;/div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Cart">Cart</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#GET">GET</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#POST">POST</a></li><li><a href="global.html#down">down</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#up">up</a></li><li><a href="global.html#useCart">useCart</a></li><li><a href="global.html#verifyToken">verifyToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 22:22:44 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
