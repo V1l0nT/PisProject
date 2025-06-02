@@ -11,10 +11,10 @@ module.exports = {
       password: process.env.DB_PASSWORD, // Пароль
     },
     migrations: {
-      directory: './migrations',
+      directory: './migrations', // Укажите путь, где хотите хранить миграции
     },
     seeds: {
-      directory: './seeds',
+      directory: './seeds', // Путь к папке с сидерами (если нужны)
     },
   },
 
